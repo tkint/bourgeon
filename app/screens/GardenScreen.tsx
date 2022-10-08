@@ -3,7 +3,7 @@ import { RootTabScreenProps } from '../../types';
 import { Text } from '../components/shared/Text';
 import { View } from '../components/shared/View';
 
-export const Garden: React.FunctionComponent<RootTabScreenProps<'Garden'>> = () => {
+export const GardenScreen: React.FunctionComponent<RootTabScreenProps<'Garden'>> = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Garden</Text>

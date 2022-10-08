@@ -3,7 +3,7 @@ import { Text } from '../components/shared/Text';
 import { View } from '../components/shared/View';
 import { RootTabScreenProps } from '../../types';
 
-export const Reminders: React.FunctionComponent<RootTabScreenProps<'Reminders'>> = ({ navigation }) => {
+export const RemindersScreen: React.FunctionComponent<RootTabScreenProps<'Reminders'>> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Reminders</Text>

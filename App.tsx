@@ -4,7 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { useCachedResources } from './app/hooks/useCachedResources';
 import { ThemeContextProvider } from './app/hooks/useTheme';
-import { Navigation } from './app/navigation';
+import { Navigation } from './app/navigation/Navigation';
 
 export const App: React.FunctionComponent = () => {
   const isLoadingComplete = useCachedResources();
