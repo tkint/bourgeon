@@ -1,8 +1,9 @@
 import * as WebBrowser from 'expo-web-browser';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '../constants/Colors';
-import { MonoText } from './StyledText';
-import { Text, View } from './Themed';
+import { MonoText } from './shared/StyledText';
+import { Text } from "./shared/Text";
+import { View } from "./shared/View";
 
 export const EditScreenInfo: React.FunctionComponent<{ path: string }> = ({ path }) => {
   return (

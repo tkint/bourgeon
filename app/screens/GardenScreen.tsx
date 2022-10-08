@@ -1,16 +1,13 @@
 import { StyleSheet } from 'react-native';
-import { Text, View } from '../components/Themed';
-import { RootTabScreenProps } from '../types';
+import { RootTabScreenProps } from '../../types';
+import { Text } from '../components/shared/Text';
+import { View } from '../components/shared/View';
 
 export const Garden: React.FunctionComponent<RootTabScreenProps<'Garden'>> = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Garden</Text>
-      <View
-        style={styles.separator}
-        lightColor='#eee'
-        darkColor='rgba(255,255,255,0.1)'
-      />
+      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
     </View>
   );
 };

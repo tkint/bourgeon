@@ -10,22 +10,20 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Pressable } from 'react-native';
 
-import { Colors, ColorSchemeName } from '../constants/Colors';
-import { useColorScheme } from '../hooks/useColorScheme';
+import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../../types';
+import { Colors } from '../constants/Colors';
+import { useTheme } from '../hooks/useTheme';
 import { Garden } from '../screens/GardenScreen';
 import { NotFoundScreen } from '../screens/NotFoundScreen';
 import { Reminders } from '../screens/RemindersScreen';
 import { SettingsModalScreen as SettingsModal } from '../screens/SettingsModalScreen';
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
-export const Navigation: React.FunctionComponent<{
-  colorScheme: ColorSchemeName;
-}> = ({ colorScheme }) => {
+export const Navigation: React.FunctionComponent = () => {
+  const { safeTheme } = useTheme();
+
   return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <NavigationContainer linking={LinkingConfiguration} theme={safeTheme === 'dark' ? DarkTheme : DefaultTheme}>
       <RootNavigator />
     </NavigationContainer>
   );
@@ -40,22 +38,10 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const RootNavigator: React.FunctionComponent = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name='Root'
-        component={BottomTabNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name='NotFound'
-        component={NotFoundScreen}
-        options={{ title: 'Oops!' }}
-      />
+      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen
-          name='SettingsModal'
-          options={{ title: 'Settings' }}
-          component={SettingsModal}
-        />
+        <Stack.Screen name="SettingsModal" options={{ title: 'Settings' }} component={SettingsModal} />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -70,7 +56,7 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 const SettingsModalButton: React.FunctionComponent<RootTabScreenProps<keyof RootTabParamList>['navigation']> = (
   navigation
 ) => {
-  const colorScheme = useColorScheme();
+  const { safeTheme } = useTheme();
 
   return (
     <Pressable
@@ -78,50 +64,35 @@ const SettingsModalButton: React.FunctionComponent<RootTabScreenProps<keyof Root
       style={({ pressed }) => ({
         opacity: pressed ? 0.5 : 1,
       })}>
-      <FontAwesome
-        name='cogs'
-        size={25}
-        color={Colors[colorScheme].text}
-        style={{ marginRight: 15 }}
-      />
+      <FontAwesome name="cogs" size={25} color={Colors[safeTheme].text} style={{ marginRight: 15 }} />
     </Pressable>
   );
 };
 
 const BottomTabNavigator: React.FunctionComponent = () => {
-  const colorScheme = useColorScheme();
+  const { safeTheme } = useTheme();
 
   return (
     <BottomTab.Navigator
-      initialRouteName='Reminders'
+      initialRouteName="Reminders"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: Colors[safeTheme].tint,
       }}>
       <BottomTab.Screen
-        name='Reminders'
+        name="Reminders"
         component={Reminders}
         options={({ navigation }: RootTabScreenProps<'Reminders'>) => ({
           title: 'Reminders',
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon
-              name='calendar-o'
-              color={color}
-            />
-          ),
+          tabBarIcon: ({ color }) => <TabBarIcon name="calendar-o" color={color} />,
           headerRight: () => SettingsModalButton(navigation),
         })}
       />
       <BottomTab.Screen
-        name='Garden'
+        name="Garden"
         component={Garden}
         options={({ navigation }: RootTabScreenProps<'Garden'>) => ({
           title: 'Garden',
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon
-              name='leaf'
-              color={color}
-            />
-          ),
+          tabBarIcon: ({ color }) => <TabBarIcon name="leaf" color={color} />,
           headerRight: () => SettingsModalButton(navigation),
         })}
       />
@@ -136,11 +107,5 @@ const TabBarIcon: React.FunctionComponent<{
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
 }> = (props) => {
-  return (
-    <FontAwesome
-      size={30}
-      style={{ marginBottom: -3 }}
-      {...props}
-    />
-  );
+  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 };

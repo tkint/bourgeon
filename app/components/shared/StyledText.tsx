@@ -1,4 +1,4 @@
-import { Text, TextProps } from './Themed';
+import { Text, TextProps } from "./Text";
 
 export const MonoText: React.FunctionComponent<TextProps> = (props) => {
   return (
