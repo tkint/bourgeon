@@ -35,7 +35,7 @@ const makeLightScheme: MakeScheme = () => {
 const makeDarkScheme: MakeScheme = () => {
   const textColor = '#fff';
   const backgroundColor = '#000';
-  const tintColor = '#fff';
+  const tintColor = '#2f95dc';
 
   return {
     text: textColor,
