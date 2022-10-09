@@ -5,13 +5,19 @@ import { View } from '../components/shared/View';
 import { useUnitSystem } from '../hooks/useUnits';
 
 export const RemindersScreen: React.FunctionComponent<RootTabScreenProps<'Reminders'>> = ({ navigation }) => {
-  const { format } = useUnitSystem();
+  const { autoFormat } = useUnitSystem();
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Reminders</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Text>{format(10, 'meters')}</Text>
+      <Text>
+        100 km ={' '}
+        {autoFormat(100, {
+          source: 'metric',
+          units: { metric: 'km', imperial: 'mi' },
+        })}
+      </Text>
     </View>
   );
 };

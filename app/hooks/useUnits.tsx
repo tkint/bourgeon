@@ -1,10 +1,12 @@
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
+import configureMeasurements, { allMeasures, AllMeasuresUnits, UnitDescription } from 'convert-units';
 import React, { useContext, useEffect, useState } from 'react';
 
 const STORAGE_KEY = '@bourgeon/units';
 
+const convert = configureMeasurements(allMeasures);
+
 type UnitSystem = 'metric' | 'imperial';
-type UnitType = 'meters';
 
 type UnitSystemContextState = {
   unitSystem: UnitSystem;
@@ -20,7 +22,20 @@ type UnitSystemState = UnitSystemContextState & {};
 
 type UseUnitsReturn = UnitSystemState &
   UnitSystemContextFunctions & {
-    format: (value: number, unit: UnitType) => string;
+    convert: typeof convert;
+    autoConvert: (
+      value: number,
+      options: { source?: UnitSystem; units: Record<UnitSystem, AllMeasuresUnits> }
+    ) => number;
+    autoFormat: (
+      value: number,
+      options: {
+        source?: UnitSystem;
+        units: Record<UnitSystem, AllMeasuresUnits>;
+        precision?: number;
+        transform?: (value: number, unit: AllMeasuresUnits) => string;
+      }
+    ) => string;
   };
 
 const UnitSystemContext = React.createContext<UnitSystemContextValue>(null as any);
@@ -28,29 +43,31 @@ const UnitSystemContext = React.createContext<UnitSystemContextValue>(null as an
 export const useUnitSystem = (): UseUnitsReturn => {
   const { unitSystem, setUnitSystem } = useContext(UnitSystemContext);
 
+  const autoConvert: UseUnitsReturn['autoConvert'] = (value, { source = 'metric', units }) => {
+    return convert(value).from(units[source]).to(units[unitSystem]);
+  };
+
+  const autoFormat: UseUnitsReturn['autoFormat'] = (value, { source, units, precision = 2, transform }) => {
+    const convertedValue = autoConvert(value, { source, units });
+    const targetUnit = units[unitSystem];
+
+    if (transform) {
+      return transform(convertedValue, targetUnit);
+    }
+
+    return `${convertedValue.toFixed(precision)} ${targetUnit}`;
+  };
+
   return {
     unitSystem,
     setUnitSystem,
-    format: (value, unit) => {
-      switch (unitSystem) {
-        case 'metric':
-          switch (unit) {
-            case 'meters':
-              return `${value}m`;
-          }
-        case 'imperial':
-          switch (unit) {
-            case 'meters':
-              return `${value}ft`;
-          }
-      }
-    },
+    convert,
+    autoConvert,
+    autoFormat,
   };
 };
 
-export const UnitsContextProvider: React.FunctionComponent<{
-  children: React.ReactNode | ((state: UnitSystemState) => React.ReactNode);
-}> = ({ children }) => {
+export const UnitsContextProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
   const { getItem, setItem, removeItem } = useAsyncStorage(STORAGE_KEY);
 
   const [unitSystem, setUnitSystem] = useState<UnitSystem>('metric');
@@ -81,17 +98,9 @@ export const UnitsContextProvider: React.FunctionComponent<{
     load();
   }, []);
 
-  const unitSystemState = makeUnitSystemState(unitSystem);
-
   return (
-    <UnitSystemContext.Provider value={{ ...unitSystemState, setUnitSystem: setUnitSystemAndPersist }}>
-      {typeof children === 'function' ? children(unitSystemState) : children}
+    <UnitSystemContext.Provider value={{ unitSystem, setUnitSystem: setUnitSystemAndPersist }}>
+      {children}
     </UnitSystemContext.Provider>
   );
-};
-
-const makeUnitSystemState = (units: UnitSystem): UnitSystemState => {
-  return {
-    unitSystem: units,
-  };
 };
