@@ -11,7 +11,7 @@ import { useTheme } from '../hooks/useTheme';
 import { RootNavigator } from './RootNavigator';
 
 export const Navigation: React.FunctionComponent = () => {
-  const { safeTheme } = useTheme();
+  const { theme: safeTheme } = useTheme();
 
   return (
     <NavigationContainer linking={Linking} theme={safeTheme === 'dark' ? DarkTheme : DefaultTheme}>

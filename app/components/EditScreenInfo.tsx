@@ -37,7 +37,7 @@ export const EditScreenInfo: React.FunctionComponent<{ path: string }> = ({ path
           style={styles.helpLink}>
           <Text
             style={styles.helpLinkText}
-            lightColor={Colors.light.tint}>
+            lightColor={Colors.light.primary}>
             Tap here if your app doesn't automatically update after making changes
           </Text>
         </TouchableOpacity>

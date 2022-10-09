@@ -15,13 +15,13 @@ import { TabBarIcon } from './TabBarIcon';
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 export const BottomTabNavigator: React.FunctionComponent = () => {
-  const { safeTheme } = useTheme();
+  const { theme: safeTheme } = useTheme();
 
   return (
     <BottomTab.Navigator
       initialRouteName="Reminders"
       screenOptions={{
-        tabBarActiveTintColor: Colors[safeTheme].tint,
+        tabBarActiveTintColor: Colors[safeTheme].primary,
       }}>
       <BottomTab.Screen
         name="Reminders"

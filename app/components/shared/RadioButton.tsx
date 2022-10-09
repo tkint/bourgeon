@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, PressableProps, StyleSheet } from 'react-native';
-import { ThemeProps, useThemeColors } from '../../hooks/useTheme';
+import { ThemeProps, useTheme } from '../../hooks/useTheme';
 import { Text } from './Text';
 import { View, ViewProps } from './View';
 
@@ -15,15 +15,19 @@ type RadioButtonProps<T> = ThemeProps &
   };
 
 export const makeRadioButton = <T,>(value: T) => {
-  const Context = React.createContext<{ value: T; onChange: (newValue: T) => void }>({ value: value } as any);
+  const { scheme } = useTheme();
+
+  const Context = React.createContext<{ value: T; onChange: (newValue: T) => void }>({ value } as any);
 
   return {
     Group: ({ onChange, children, ...props }: RadioButtonGroupProps<T>) => {
       const { style, ...otherProps } = props;
 
+      const { menu } = scheme;
+
       return (
         <Context.Provider value={{ value, onChange }}>
-          <View accessibilityRole="radiogroup" style={[style, styles.group]} {...otherProps}>
+          <View accessibilityRole="radiogroup" style={[styles.group, { backgroundColor: menu }, style]} {...otherProps}>
             {children}
           </View>
         </Context.Provider>
@@ -31,14 +35,15 @@ export const makeRadioButton = <T,>(value: T) => {
     },
     Button: ({ value, onPress, ...props }: RadioButtonProps<T>) => {
       const { lightColor, darkColor, title, disabled, style, ...otherProps } = props;
-      const { radioDefaultText, radioDefaultBackground, radioSelectedText, radioSelectedBackground } = useThemeColors();
+
+      const { text, background, primary } = scheme;
 
       return (
         <Context.Consumer>
           {(context) => {
-            const checked = context.value == value;
-            const textColor = checked ? radioSelectedText : radioDefaultText;
-            const backgroundColor = checked ? radioSelectedBackground : radioDefaultBackground;
+            const checked = value == context.value;
+            const textColor = checked ? text : text;
+            const backgroundColor = checked ? primary : background;
 
             return (
               <Pressable
@@ -63,15 +68,19 @@ export const makeRadioButton = <T,>(value: T) => {
 const styles = StyleSheet.create({
   group: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderRadius: 10,
+    paddingVertical: 4,
+    paddingHorizontal: 2,
+    elevation: 3,
   },
   button: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 12,
-    borderRadius: 4,
-    elevation: 3,
-    backgroundColor: 'white',
+    marginHorizontal: 2,
+    borderRadius: 6,
   },
   text: {},
 });

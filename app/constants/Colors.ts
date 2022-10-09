@@ -5,11 +5,9 @@ export type ThemeName = Exclude<DefaultColorSchemeName, null | undefined>;
 export type ColorScheme = {
   text: string;
   background: string;
-  tint: string;
-  radioDefaultText: string;
-  radioDefaultBackground: string;
-  radioSelectedText: string;
-  radioSelectedBackground: string;
+  menu: string;
+  primary: string;
+  secondary: string;
 };
 
 type Themes = Record<ThemeName, ColorScheme>;
@@ -17,34 +15,22 @@ type Themes = Record<ThemeName, ColorScheme>;
 type MakeScheme = () => ColorScheme;
 
 const makeLightScheme: MakeScheme = () => {
-  const textColor = '#000';
-  const backgroundColor = '#fff';
-  const tintColor = '#2f95dc';
-
   return {
-    text: textColor,
-    background: backgroundColor,
-    tint: tintColor,
-    radioDefaultText: textColor,
-    radioDefaultBackground: backgroundColor,
-    radioSelectedText: textColor,
-    radioSelectedBackground: tintColor,
+    text: '#121212',
+    background: '#ffffff',
+    menu: '#eeeeee',
+    primary: '#339966',
+    secondary: '#ffffff',
   };
 };
 
 const makeDarkScheme: MakeScheme = () => {
-  const textColor = '#fff';
-  const backgroundColor = '#000';
-  const tintColor = '#2f95dc';
-
   return {
-    text: textColor,
-    background: backgroundColor,
-    tint: tintColor,
-    radioDefaultText: textColor,
-    radioDefaultBackground: backgroundColor,
-    radioSelectedText: textColor,
-    radioSelectedBackground: tintColor,
+    text: '#ffffff',
+    background: '#121212',
+    menu: '#323232',
+    primary: '#339966',
+    secondary: '#121212',
   };
 };
 

@@ -8,7 +8,8 @@ import { useTheme } from '../hooks/useTheme';
 export const SettingsModalButton: React.FunctionComponent<RootTabScreenProps<keyof RootTabParamList>['navigation']> = (
   navigation
 ) => {
-  const { safeTheme } = useTheme();
+  const { getColor } = useTheme();
+  const color = getColor('text');
 
   return (
     <Pressable
@@ -16,7 +17,7 @@ export const SettingsModalButton: React.FunctionComponent<RootTabScreenProps<key
       style={({ pressed }) => ({
         opacity: pressed ? 0.5 : 1,
       })}>
-      <FontAwesome name="cog" size={25} color={Colors[safeTheme].text} style={{ marginRight: 15 }} />
+      <FontAwesome name="cog" size={25} color={color} style={{ marginRight: 15 }} />
     </Pressable>
   );
 };

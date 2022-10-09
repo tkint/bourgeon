@@ -10,6 +10,7 @@ import { BottomTabNavigator } from './BottomTab';
  * https://reactnavigation.org/docs/modal
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
+
 export const RootNavigator: React.FunctionComponent = () => {
   return (
     <Stack.Navigator>

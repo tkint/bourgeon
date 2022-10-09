@@ -5,29 +5,48 @@ import { Colors, ColorScheme, ThemeName } from '../constants/Colors';
 
 const STORAGE_SCHEME_KEY = '@bourgeon/scheme';
 
-const ThemeContext = React.createContext<{
-  theme: ThemeName | undefined;
-  safeTheme: ThemeName;
-  setTheme: (newValue: ThemeName | undefined) => void;
-}>(null as any);
+type ThemeNameOrAuto = ThemeName | 'auto';
 
-export const useTheme = () => useContext(ThemeContext);
-
-export const useThemeColor = (props: Partial<Record<ThemeName, string>>, colorName: keyof ColorScheme): string => {
-  const { safeTheme } = useTheme();
-  const colorFromProps = props[safeTheme];
-
-  if (colorFromProps) {
-    return colorFromProps;
-  } else {
-    return Colors[safeTheme][colorName];
-  }
+type ThemeContextState = {
+  rawTheme: ThemeNameOrAuto;
 };
 
-export const useThemeColors = (): ColorScheme => {
-  const { safeTheme } = useTheme();
+type ThemeContextFunctions = {
+  setRawTheme: (newTheme: ThemeNameOrAuto) => void;
+};
 
-  return Colors[safeTheme];
+type ThemeContextValue = ThemeContextState & ThemeContextFunctions;
+
+type ThemeState = ThemeContextState & {
+  theme: ThemeName;
+  invertedTheme: ThemeName;
+};
+
+type UseThemeReturn = ThemeState &
+  ThemeContextFunctions & {
+    scheme: ColorScheme;
+    invertedScheme: ColorScheme;
+    getColor: (name: keyof ColorScheme, props?: Partial<Record<ThemeName, string>>) => string;
+  };
+
+const ThemeContext = React.createContext<ThemeContextValue>(null as any);
+
+export const useTheme = (): UseThemeReturn => {
+  const { rawTheme, setRawTheme } = useContext(ThemeContext);
+
+  const { theme, invertedTheme } = makeThemeState(rawTheme);
+  const scheme = Colors[theme];
+  const invertedScheme = Colors[invertedTheme];
+
+  return {
+    theme,
+    invertedTheme,
+    rawTheme,
+    setRawTheme,
+    scheme,
+    invertedScheme,
+    getColor: (name, props) => props?.[theme] ?? scheme[name],
+  };
 };
 
 export type ThemeProps = {
@@ -35,16 +54,15 @@ export type ThemeProps = {
   darkColor?: string;
 };
 
-export const ThemeContextProvider: React.FunctionComponent<{ children?: React.ReactNode | undefined }> = ({
-  children,
-}) => {
-  const userColorScheme = useColorScheme();
-
-  const [localTheme, setLocalTheme] = useState<ThemeName>();
+export const ThemeContextProvider: React.FunctionComponent<{
+  children: React.ReactNode | ((state: ThemeState) => React.ReactNode);
+}> = ({ children }) => {
   const { getItem, setItem, removeItem } = useAsyncStorage(STORAGE_SCHEME_KEY);
 
-  const setTheme = async (newValue: ThemeName | undefined) => {
-    setLocalTheme(newValue);
+  const [rawTheme, setRawTheme] = useState<ThemeNameOrAuto>('auto');
+
+  const setRawThemeAndPersist = async (newValue: ThemeNameOrAuto) => {
+    setRawTheme(newValue);
     if (newValue) setItem(newValue);
     else removeItem();
   };
@@ -57,10 +75,11 @@ export const ThemeContextProvider: React.FunctionComponent<{ children?: React.Re
         switch (value) {
           case 'light':
           case 'dark':
-            setLocalTheme(value);
+          case 'auto':
+            await setRawThemeAndPersist(value);
             break;
           default:
-            await removeItem();
+            await setRawThemeAndPersist('auto');
             break;
         }
       } catch (e) {}
@@ -69,14 +88,24 @@ export const ThemeContextProvider: React.FunctionComponent<{ children?: React.Re
     load();
   }, []);
 
+  const themeState = makeThemeState(rawTheme);
+
   return (
-    <ThemeContext.Provider
-      value={{
-        theme: localTheme,
-        safeTheme: localTheme ?? userColorScheme ?? 'light',
-        setTheme: setTheme,
-      }}>
-      {children}
+    <ThemeContext.Provider value={{ ...themeState, setRawTheme: setRawThemeAndPersist }}>
+      {typeof children === 'function' ? children(themeState) : children}
     </ThemeContext.Provider>
   );
+};
+
+const makeThemeState = (rawTheme: ThemeNameOrAuto): ThemeState => {
+  const userTheme = useColorScheme() as ThemeName;
+
+  const theme = !rawTheme || rawTheme === 'auto' ? userTheme : rawTheme;
+  const invertedTheme = theme === 'dark' ? 'light' : 'dark';
+
+  return {
+    theme,
+    invertedTheme,
+    rawTheme,
+  };
 };
