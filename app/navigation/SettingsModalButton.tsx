@@ -16,7 +16,7 @@ export const SettingsModalButton: React.FunctionComponent<RootTabScreenProps<key
       style={({ pressed }) => ({
         opacity: pressed ? 0.5 : 1,
       })}>
-      <FontAwesome name="cog" size={25} color={color} style={{ marginRight: 15 }} />
+      <FontAwesome name="user" size={25} color={color} style={{ marginRight: 15 }} />
     </Pressable>
   );
 };

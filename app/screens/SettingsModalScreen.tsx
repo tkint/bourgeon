@@ -1,21 +1,37 @@
+import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet } from 'react-native';
+import { Button } from '../components/shared/Button';
 
 import { makeRadioButton } from '../components/shared/RadioButton';
 import { Text } from '../components/shared/Text';
 import { View } from '../components/shared/View';
+import { logoutUser } from '../data/User';
 import { usePreference } from '../hooks/usePreferences';
-import { useTheme } from '../hooks/useTheme';
 
 export const SettingsModalScreen: React.FunctionComponent = () => {
-  const { invertedTheme, rawTheme, setRawTheme } = usePreference('theme');
+  const navigation = useNavigation();
+
+  const { invertedTheme, rawTheme, setRawTheme, getColor } = usePreference('theme');
   const ThemeRadio = makeRadioButton(rawTheme);
 
   const { system: units, setSystem: setUnits } = usePreference('units');
   const UnitsRadio = makeRadioButton(units);
 
+  const logout = async () => {
+    if (await logoutUser()) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'SignIn' }],
+      });
+    }
+  };
+
   return (
     <View style={styles.container}>
+      {/* Use a light status bar on iOS to account for the black space above the modal */}
+      <StatusBar style={Platform.OS === 'ios' ? 'light' : invertedTheme} />
+
       <Text style={styles.settingTitle}>Theme</Text>
 
       <View style={styles.settingContent}>
@@ -35,8 +51,9 @@ export const SettingsModalScreen: React.FunctionComponent = () => {
         </UnitsRadio.Group>
       </View>
 
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : invertedTheme} />
+      <View style={styles.settingContent}>
+        <Button title="Log out" color={getColor('primary')} onPress={logout}></Button>
+      </View>
     </View>
   );
 };

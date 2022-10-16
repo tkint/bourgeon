@@ -10,12 +10,12 @@ import { RootStackParamList } from '../../types';
 import { usePreference } from '../hooks/usePreferences';
 import { RootNavigator } from './RootNavigator';
 
-export const Navigation: React.FunctionComponent = () => {
-  const { theme: safeTheme } = usePreference('theme');
+export const Navigation: React.FunctionComponent<{ user: Parse.User | null }> = (props) => {
+  const { theme } = usePreference('theme');
 
   return (
-    <NavigationContainer linking={Linking} theme={safeTheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
+    <NavigationContainer linking={Linking} theme={theme === 'dark' ? DarkTheme : DefaultTheme}>
+      <RootNavigator user={props.user} />
     </NavigationContainer>
   );
 };
@@ -24,6 +24,8 @@ const Linking: LinkingOptions<RootStackParamList> = {
   prefixes: [createURL('/')],
   config: {
     screens: {
+      SignIn: 'signin',
+      SignUp: 'signup',
       Root: {
         screens: {
           Reminders: {
