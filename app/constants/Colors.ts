@@ -2,6 +2,11 @@ import { ColorSchemeName as DefaultColorSchemeName } from 'react-native';
 
 export type ThemeName = Exclude<DefaultColorSchemeName, null | undefined>;
 
+export type ThemeProps = {
+  lightColor?: string;
+  darkColor?: string;
+};
+
 export type ColorScheme = {
   text: string;
   background: string;

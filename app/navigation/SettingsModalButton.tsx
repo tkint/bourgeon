@@ -2,13 +2,12 @@ import { FontAwesome } from '@expo/vector-icons';
 import * as React from 'react';
 import { Pressable } from 'react-native';
 import { RootTabParamList, RootTabScreenProps } from '../../types';
-import { Colors } from '../constants/Colors';
-import { useTheme } from '../hooks/useTheme';
+import { usePreference } from '../hooks/usePreferences';
 
 export const SettingsModalButton: React.FunctionComponent<RootTabScreenProps<keyof RootTabParamList>['navigation']> = (
   navigation
 ) => {
-  const { getColor } = useTheme();
+  const { getColor } = usePreference('theme');
   const color = getColor('text');
 
   return (

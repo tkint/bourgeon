@@ -2,10 +2,10 @@ import { StyleSheet } from 'react-native';
 import { RootTabScreenProps } from '../../types';
 import { Text } from '../components/shared/Text';
 import { View } from '../components/shared/View';
-import { useUnitSystem } from '../hooks/useUnits';
+import { usePreference } from '../hooks/usePreferences';
 
 export const RemindersScreen: React.FunctionComponent<RootTabScreenProps<'Reminders'>> = ({ navigation }) => {
-  const { autoFormat } = useUnitSystem();
+  const { autoFormat } = usePreference('units');
 
   return (
     <View style={styles.container}>

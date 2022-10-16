@@ -4,14 +4,14 @@ import { Platform, StyleSheet } from 'react-native';
 import { makeRadioButton } from '../components/shared/RadioButton';
 import { Text } from '../components/shared/Text';
 import { View } from '../components/shared/View';
+import { usePreference } from '../hooks/usePreferences';
 import { useTheme } from '../hooks/useTheme';
-import { useUnitSystem } from '../hooks/useUnits';
 
 export const SettingsModalScreen: React.FunctionComponent = () => {
-  const { invertedTheme, rawTheme, setRawTheme } = useTheme();
+  const { invertedTheme, rawTheme, setRawTheme } = usePreference('theme');
   const ThemeRadio = makeRadioButton(rawTheme);
 
-  const { unitSystem: units, setUnitSystem: setUnits } = useUnitSystem();
+  const { system: units, setSystem: setUnits } = usePreference('units');
   const UnitsRadio = makeRadioButton(units);
 
   return (

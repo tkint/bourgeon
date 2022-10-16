@@ -1,10 +1,11 @@
 import { View as DefaultView } from 'react-native';
-import { ThemeProps, useTheme } from '../../hooks/useTheme';
+import { usePreference } from '../../hooks/usePreferences';
+import { ThemeProps } from '../../constants/Colors';
 
 export type ViewProps = ThemeProps & DefaultView['props'];
 
 export const View: React.FunctionComponent<ViewProps> = (props) => {
-  const { getColor } = useTheme();
+  const { getColor } = usePreference('theme');
 
   const { style, lightColor, darkColor, ...otherProps } = props;
   const backgroundColor = getColor('background', { light: lightColor, dark: darkColor });

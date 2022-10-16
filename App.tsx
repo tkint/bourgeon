@@ -3,8 +3,7 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { useCachedResources } from './app/hooks/useCachedResources';
-import { ThemeContextProvider } from './app/hooks/useTheme';
-import { UnitsContextProvider } from './app/hooks/useUnits';
+import { PreferencesProvider } from './app/hooks/usePreferences';
 import { Navigation } from './app/navigation/Navigation';
 
 export const App: React.FunctionComponent = () => {
@@ -15,17 +14,15 @@ export const App: React.FunctionComponent = () => {
   } else {
     return (
       <SafeAreaProvider>
-        <UnitsContextProvider>
-          <ThemeContextProvider
-            children={({ invertedTheme }) => {
-              return (
-                <>
-                  <Navigation />
-                  <StatusBar style={invertedTheme} />
-                </>
-              );
-            }}></ThemeContextProvider>
-        </UnitsContextProvider>
+        <PreferencesProvider
+          children={({ invertedTheme }) => {
+            return (
+              <>
+                <Navigation />
+                <StatusBar style={invertedTheme} />
+              </>
+            );
+          }}></PreferencesProvider>
       </SafeAreaProvider>
     );
   }

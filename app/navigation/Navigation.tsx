@@ -7,11 +7,11 @@ import { DarkTheme, DefaultTheme, LinkingOptions, NavigationContainer } from '@r
 import { createURL } from 'expo-linking';
 import * as React from 'react';
 import { RootStackParamList } from '../../types';
-import { useTheme } from '../hooks/useTheme';
+import { usePreference } from '../hooks/usePreferences';
 import { RootNavigator } from './RootNavigator';
 
 export const Navigation: React.FunctionComponent = () => {
-  const { theme: safeTheme } = useTheme();
+  const { theme: safeTheme } = usePreference('theme');
 
   return (
     <NavigationContainer linking={Linking} theme={safeTheme === 'dark' ? DarkTheme : DefaultTheme}>

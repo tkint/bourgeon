@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pressable, PressableProps, StyleSheet } from 'react-native';
-import { ThemeProps, useTheme } from '../../hooks/useTheme';
+import { usePreference } from '../../hooks/usePreferences';
+import { ThemeProps } from '../../constants/Colors';
 import { Text } from './Text';
 import { View, ViewProps } from './View';
 
@@ -15,7 +16,7 @@ type RadioButtonProps<T> = ThemeProps &
   };
 
 export const makeRadioButton = <T,>(value: T) => {
-  const { scheme } = useTheme();
+  const { scheme } = usePreference('theme');
 
   const Context = React.createContext<{ value: T; onChange: (newValue: T) => void }>({ value } as any);
 
