@@ -1,15 +1,16 @@
-import { Link, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, { FC, ReactElement, useState } from 'react';
 import { Button, StyleSheet, TextInput } from 'react-native';
 import { Text } from '../components/shared/Text';
 import { View } from '../components/shared/View';
-import { loginUser } from '../data/User';
-import { usePreference } from '../hooks/usePreferences';
+import { useAuthentication } from '../hooks/useAuthentication';
+import { useTheme } from '../hooks/useTheme';
 
 export const SignInScreen: FC<{}> = ({}): ReactElement => {
   const navigation = useNavigation();
+  const { login } = useAuthentication();
 
-  const { getColor } = usePreference('theme');
+  const { getColor } = useTheme();
 
   const linkColor = getColor('primary');
 
@@ -17,7 +18,7 @@ export const SignInScreen: FC<{}> = ({}): ReactElement => {
   const [password, setPassword] = useState('');
 
   const submit = async () => {
-    if (await loginUser({ username, password })) {
+    if (await login({ username, password })) {
       navigation.reset({ index: 0, routes: [{ name: 'Root' }] });
     }
   };
@@ -38,13 +39,17 @@ export const SignInScreen: FC<{}> = ({}): ReactElement => {
         secureTextEntry
         onChangeText={(text) => setPassword(text)}
       />
-      <Button title={'Sign In'} onPress={submit} />
+      <Button color={getColor('primary')} title={'Sign In'} onPress={submit} />
 
       <Text style={styles.bottomAction}>
         Don't have an account ?{' '}
-        <Link style={{ color: linkColor }} to={{ screen: 'SignUp' }}>
+        <Text
+          style={{ color: linkColor, marginTop: 20 }}
+          onPress={() => {
+            navigation.reset({ index: 0, routes: [{ name: 'SignUp' }] });
+          }}>
           Sign up
-        </Link>
+        </Text>
       </Text>
     </View>
   );
@@ -58,6 +63,7 @@ const styles = StyleSheet.create({
 
   input: {
     height: 40,
+    paddingLeft: 10,
     marginBottom: 10,
     backgroundColor: '#fff',
   },

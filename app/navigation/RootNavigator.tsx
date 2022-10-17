@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { RootStackParamList } from '../../types';
+import { useAuthentication } from '../hooks/useAuthentication';
 import { NotFoundScreen } from '../screens/NotFoundScreen';
 import { SettingsModalScreen } from '../screens/SettingsModalScreen';
 import { SignInScreen } from '../screens/SignInScreen';
@@ -13,11 +14,13 @@ import { BottomTabNavigator } from './BottomTabNavigator';
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export const RootNavigator: React.FunctionComponent<{ user: Parse.User | null }> = (props) => {
+export const RootNavigator: React.FunctionComponent = () => {
+  const { currentUser: currentUser } = useAuthentication();
+
   return (
-    <Stack.Navigator initialRouteName={props.user ? 'Root' : 'SignIn'}>
-      <Stack.Screen name="SignIn" component={SignInScreen} options={{ title: 'Sign In' }} />
-      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'Sign Up' }} />
+    <Stack.Navigator initialRouteName={currentUser ? 'Root' : 'SignIn'}>
+      <Stack.Screen name="SignIn" component={SignInScreen} options={{ title: 'Sign In', animation: 'none' }} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'Sign Up', animation: 'none' }} />
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'transparentModal' }}>

@@ -1,11 +1,11 @@
 import { Text as DefaultText } from 'react-native';
-import { usePreference } from '../../hooks/usePreferences';
 import { ThemeProps } from '../../constants/Colors';
+import { useTheme } from '../../hooks/useTheme';
 
 export type TextProps = ThemeProps & DefaultText['props'];
 
 export const Text: React.FunctionComponent<TextProps> = (props) => {
-  const { getColor } = usePreference('theme');
+  const { getColor } = useTheme();
 
   const { style, lightColor, darkColor, ...otherProps } = props;
   const color = getColor('text', { light: lightColor, dark: darkColor });

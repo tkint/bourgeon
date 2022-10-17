@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as React from 'react';
 import { RootTabParamList, RootTabScreenProps } from '../../types';
 import { Colors } from '../constants/Colors';
-import { usePreference } from '../hooks/usePreferences';
+import { useTheme } from '../hooks/useTheme';
 import { GardenScreen } from '../screens/GardenScreen';
 import { RemindersScreen } from '../screens/RemindersScreen';
 import { SettingsModalButton } from './SettingsModalButton';
@@ -15,13 +15,13 @@ import { TabBarIcon } from './TabBarIcon';
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 export const BottomTabNavigator: React.FunctionComponent = () => {
-  const { theme: safeTheme } = usePreference('theme');
+  const { theme } = useTheme();
 
   return (
     <BottomTab.Navigator
       initialRouteName="Reminders"
       screenOptions={{
-        tabBarActiveTintColor: Colors[safeTheme].primary,
+        tabBarActiveTintColor: Colors[theme].primary,
       }}>
       <BottomTab.Screen
         name="Reminders"

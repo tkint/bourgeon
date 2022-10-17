@@ -2,24 +2,26 @@ import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet } from 'react-native';
 import { Button } from '../components/shared/Button';
-
 import { makeRadioButton } from '../components/shared/RadioButton';
 import { Text } from '../components/shared/Text';
 import { View } from '../components/shared/View';
-import { logoutUser } from '../data/User';
-import { usePreference } from '../hooks/usePreferences';
+import { useAuthentication } from '../hooks/useAuthentication';
+import { useTheme } from '../hooks/useTheme';
+import { useUnits } from '../hooks/useUnits';
 
 export const SettingsModalScreen: React.FunctionComponent = () => {
   const navigation = useNavigation();
+  const { logout } = useAuthentication();
 
-  const { invertedTheme, rawTheme, setRawTheme, getColor } = usePreference('theme');
+  const { invertedTheme, rawTheme, setRawTheme, getColor } = useTheme();
   const ThemeRadio = makeRadioButton(rawTheme);
 
-  const { system: units, setSystem: setUnits } = usePreference('units');
+  const { system: units, setSystem: setUnits } = useUnits();
   const UnitsRadio = makeRadioButton(units);
 
-  const logout = async () => {
-    if (await logoutUser()) {
+  const logoutUser = async () => {
+    if (await logout()) {
+      navigation.goBack();
       navigation.reset({
         index: 0,
         routes: [{ name: 'SignIn' }],
@@ -52,7 +54,7 @@ export const SettingsModalScreen: React.FunctionComponent = () => {
       </View>
 
       <View style={styles.settingContent}>
-        <Button title="Log out" color={getColor('primary')} onPress={logout}></Button>
+        <Button title="Log out" color={getColor('primary')} onPress={logoutUser}></Button>
       </View>
     </View>
   );

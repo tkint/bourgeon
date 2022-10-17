@@ -11,7 +11,7 @@ export default {
   scheme: 'myapp',
   userInterfaceStyle: 'automatic',
   splash: {
-    image: './app/assets/images/splash.png',
+    image: './app/assets/images/splash_1.png',
     resizeMode: 'contain',
     backgroundColor: '#ffffff',
   },
