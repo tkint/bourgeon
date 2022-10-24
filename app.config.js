@@ -3,8 +3,8 @@ if (!process.env.EAS_BUILD) {
 }
 
 export default {
-  name: 'Bourgeon',
-  slug: 'bourgeon',
+  name: 'EasyDaisy',
+  slug: 'easy-daisy',
   version: '1.0.0',
   orientation: 'portrait',
   icon: './app/assets/images/icon.png',
@@ -27,7 +27,7 @@ export default {
       foregroundImage: './app/assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
-    package: 'com.thomaskint.bourgeon',
+    package: 'net.easydaisy',
   },
   web: {
     favicon: './app/assets/images/favicon.png',
