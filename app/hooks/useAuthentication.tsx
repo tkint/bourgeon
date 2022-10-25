@@ -1,11 +1,19 @@
-import Parse from 'parse/react-native';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  User as AuthUser,
+} from 'firebase/auth/react-native';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { createContext, Dispatch, FC, ReactNode, SetStateAction, useContext, useState } from 'react';
 import { Alert } from 'react-native';
+import { auth, cols } from '../constants/Firebase';
 import { ThemeNameOrAuto } from './useTheme';
 import { UnitSystem } from './useUnits';
 
 export interface User {
-  username?: string;
+  uid: string;
+  email?: string;
   preferences?: User.Preferences;
 }
 
@@ -16,9 +24,9 @@ export namespace User {
   }
 }
 
-type ParseUser = Parse.User<{
+interface FirebaseUser {
   preferences?: User.Preferences;
-}>;
+}
 
 type AuthenticationContextValue = {
   currentUser?: User;
@@ -43,8 +51,8 @@ export const AuthenticationProvider: FC<{
 
 type UseAuthenticationReturn = {
   currentUser?: User;
-  register: (input: { username: string; password: string }) => Promise<boolean>;
-  login: (input: { username: string; password: string }) => Promise<boolean>;
+  register: (input: { email: string; password: string }) => Promise<boolean>;
+  login: (input: { email: string; password: string }) => Promise<boolean>;
   logout: () => Promise<boolean>;
   setPreference: <T extends keyof User.Preferences>(key: T, value: User.Preferences[T]) => Promise<void>;
 };
@@ -52,16 +60,19 @@ type UseAuthenticationReturn = {
 export const useAuthentication = (): UseAuthenticationReturn => {
   const { currentUser, setCurrentUser } = useContext(AuthenticationContext);
 
-  const setCurrentParseUser = (user: ParseUser) => setCurrentUser(mapParseUser(user));
+  const setAuthUser = async (auth: AuthUser) => {
+    const user = await getFirebaseUser(auth.uid);
+    setCurrentUser(mapFirebaseUser(auth, user));
+  };
 
   return {
     currentUser,
 
     register: async (input) => {
       try {
-        const parseUser: ParseUser = await Parse.User.signUp(input.username, input.password, {});
+        const { user: authUser } = await createUserWithEmailAndPassword(auth, input.email, input.password);
 
-        setCurrentParseUser(parseUser);
+        await setAuthUser(authUser);
 
         return true;
       } catch (error: any) {
@@ -72,9 +83,9 @@ export const useAuthentication = (): UseAuthenticationReturn => {
 
     login: async (input) => {
       try {
-        const parseUser: ParseUser = await Parse.User.logIn(input.username, input.password, {});
+        const { user: authUser } = await signInWithEmailAndPassword(auth, input.email, input.password);
 
-        setCurrentParseUser(parseUser);
+        await setAuthUser(authUser);
 
         return true;
       } catch (error: any) {
@@ -85,7 +96,7 @@ export const useAuthentication = (): UseAuthenticationReturn => {
 
     logout: async () => {
       try {
-        await Parse.User.logOut();
+        await signOut(auth);
 
         setCurrentUser(undefined);
 
@@ -97,19 +108,23 @@ export const useAuthentication = (): UseAuthenticationReturn => {
     },
 
     setPreference: async (key, value) => {
-      const parseUser = await getCurrentParseUser();
-      if (parseUser) {
+      const _currentUser = currentUser;
+      if (_currentUser) {
         try {
-          parseUser.set('preferences', {
-            ...parseUser.get('preferences'),
+          const newPreferences = {
+            ..._currentUser.preferences,
             [key]: value,
+          };
+          setCurrentUser({
+            ..._currentUser,
+            preferences: newPreferences,
           });
 
-          setCurrentParseUser(parseUser);
-
-          parseUser.save();
+          await saveFirebaseUser(_currentUser.uid, {
+            preferences: newPreferences,
+          });
         } catch (error: any) {
-          Alert.alert('Error!', error.message);
+          Alert.alert('Error ! ', error.message);
         }
       } else {
         Alert.alert('Impossible to set preference when not logged in');
@@ -119,20 +134,31 @@ export const useAuthentication = (): UseAuthenticationReturn => {
 };
 
 export const getCurrentUser = async (): Promise<User | undefined> => {
-  const currentUser = await getCurrentParseUser();
-  return currentUser && mapParseUser(currentUser);
-};
-
-const getCurrentParseUser = async (): Promise<ParseUser | undefined> => {
-  try {
-    const currentUser: ParseUser | null = await Parse.User.currentAsync();
-    return currentUser || undefined;
-  } catch {
-    return undefined;
+  const currentUser = auth.currentUser;
+  if (currentUser) {
+    const metadata = await getFirebaseUser(currentUser.uid);
+    return mapFirebaseUser(currentUser, metadata);
   }
+  return undefined;
 };
 
-const mapParseUser = (user: ParseUser): User => ({
-  username: user.getUsername(),
-  preferences: user.get('preferences'),
+const saveFirebaseUser = async (uid: string, user: FirebaseUser): Promise<void> => {
+  const docRef = doc(cols.users, uid);
+  await setDoc(docRef, user);
+};
+
+const getFirebaseUser = async (uid: string): Promise<FirebaseUser | undefined> => {
+  const docRef = doc(cols.users, uid);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return docSnap.data();
+  }
+  return undefined;
+};
+
+const mapFirebaseUser = (auth: AuthUser, firebaseUser: FirebaseUser | undefined): User => ({
+  uid: auth.uid,
+  email: auth.email || undefined,
+  preferences: firebaseUser?.preferences,
 });

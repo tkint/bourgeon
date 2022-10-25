@@ -34,10 +34,13 @@ export default {
   },
   extra: {
     eas: {
-      projectId: '476ab687-21cd-4e92-a058-4c1c927a72d4',
+      projectId: 'bf20f214-e27d-470b-91d0-c779563cf5de',
     },
-    b4aServerUrl: process.env.B4A_SERVER_URL,
-    b4aApplicationId: process.env.B4A_APPLICATION_ID,
-    b4aJavascriptKey: process.env.B4A_JAVASCRIPT_KEY,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    appId: process.env.FIREBASE_APP_ID,
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    measurementId: process.env.FIREBASE_MEASUREMENT_ID,
   },
 };
