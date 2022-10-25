@@ -14,11 +14,11 @@ export const SignInScreen: FC<{}> = ({}): ReactElement => {
 
   const linkColor = getColor('primary');
 
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const submit = async () => {
-    if (await login({ username, password })) {
+    if (await login({ email, password })) {
       navigation.reset({ index: 0, routes: [{ name: 'Root' }] });
     }
   };
@@ -27,9 +27,9 @@ export const SignInScreen: FC<{}> = ({}): ReactElement => {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        value={username}
-        placeholder={'Username'}
-        onChangeText={(text) => setUsername(text)}
+        value={email}
+        placeholder={'Email'}
+        onChangeText={(text) => setEmail(text)}
         autoCapitalize={'none'}
       />
       <TextInput

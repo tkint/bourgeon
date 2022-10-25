@@ -18,7 +18,7 @@ export const SignUpScreen: FC<{}> = ({}): ReactElement => {
   const [password, setPassword] = useState('');
 
   const submit = async () => {
-    if (await register({ username, password })) {
+    if (await register({ email: username, password })) {
       navigation.reset({ index: 0, routes: [{ name: 'Root' }] });
     }
   };
@@ -28,7 +28,7 @@ export const SignUpScreen: FC<{}> = ({}): ReactElement => {
       <TextInput
         style={styles.input}
         value={username}
-        placeholder={'Username'}
+        placeholder={'Email'}
         onChangeText={(text) => setUsername(text)}
         autoCapitalize={'none'}
       />
