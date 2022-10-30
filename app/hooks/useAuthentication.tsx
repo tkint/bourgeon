@@ -1,15 +1,11 @@
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  User as AuthUser,
-} from 'firebase/auth/react-native';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { createContext, Dispatch, FC, ReactNode, SetStateAction, useContext, useState } from 'react';
 import { Alert } from 'react-native';
-import { auth, cols } from '../constants/Firebase';
+import { cols } from '../constants/Firebase';
 import { ThemeNameOrAuto } from './useTheme';
 import { UnitSystem } from './useUnits';
+
+type AuthUser = FirebaseAuthTypes.User;
 
 export interface User {
   uid: string;
@@ -70,7 +66,7 @@ export const useAuthentication = (): UseAuthenticationReturn => {
 
     register: async (input) => {
       try {
-        const { user: authUser } = await createUserWithEmailAndPassword(auth, input.email, input.password);
+        const { user: authUser } = await auth().createUserWithEmailAndPassword(input.email, input.password);
 
         await setAuthUser(authUser);
 
@@ -83,7 +79,7 @@ export const useAuthentication = (): UseAuthenticationReturn => {
 
     login: async (input) => {
       try {
-        const { user: authUser } = await signInWithEmailAndPassword(auth, input.email, input.password);
+        const { user: authUser } = await auth().signInWithEmailAndPassword(input.email, input.password);
 
         await setAuthUser(authUser);
 
@@ -96,7 +92,7 @@ export const useAuthentication = (): UseAuthenticationReturn => {
 
     logout: async () => {
       try {
-        await signOut(auth);
+        await auth().signOut();
 
         setCurrentUser(undefined);
 
@@ -108,19 +104,18 @@ export const useAuthentication = (): UseAuthenticationReturn => {
     },
 
     setPreference: async (key, value) => {
-      const _currentUser = currentUser;
-      if (_currentUser) {
+      if (currentUser) {
         try {
           const newPreferences = {
-            ..._currentUser.preferences,
+            ...currentUser.preferences,
             [key]: value,
           };
           setCurrentUser({
-            ..._currentUser,
+            ...currentUser,
             preferences: newPreferences,
           });
 
-          await saveFirebaseUser(_currentUser.uid, {
+          await saveFirebaseUser(currentUser.uid, {
             preferences: newPreferences,
           });
         } catch (error: any) {
@@ -134,7 +129,7 @@ export const useAuthentication = (): UseAuthenticationReturn => {
 };
 
 export const getCurrentUser = async (): Promise<User | undefined> => {
-  const currentUser = auth.currentUser;
+  const currentUser = auth().currentUser;
   if (currentUser) {
     const metadata = await getFirebaseUser(currentUser.uid);
     return mapFirebaseUser(currentUser, metadata);
@@ -143,15 +138,13 @@ export const getCurrentUser = async (): Promise<User | undefined> => {
 };
 
 const saveFirebaseUser = async (uid: string, user: FirebaseUser): Promise<void> => {
-  const docRef = doc(cols.users, uid);
-  await setDoc(docRef, user);
+  await cols.users.doc(uid).set(user);
 };
 
 const getFirebaseUser = async (uid: string): Promise<FirebaseUser | undefined> => {
-  const docRef = doc(cols.users, uid);
-  const docSnap = await getDoc(docRef);
+  const docSnap = await cols.users.doc(uid).get();
 
-  if (docSnap.exists()) {
+  if (docSnap.exists) {
     return docSnap.data();
   }
   return undefined;

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "726534178586",
+    "project_id": "easy-daisy",
+    "storage_bucket": "easy-daisy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:726534178586:android:22193c8eb308ce55474ea3",
+        "android_client_info": {
+          "package_name": "net.easydaisy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "726534178586-v2b4pat0v6igee1c8bm6vbvupbo3fub9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWaDf4Fvrnvuhpl4R_AnzXzXfHdIQkAaQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "726534178586-v2b4pat0v6igee1c8bm6vbvupbo3fub9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

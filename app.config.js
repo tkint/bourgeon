@@ -19,28 +19,24 @@ export default {
     fallbackToCacheTimeout: 0,
   },
   assetBundlePatterns: ['**/*'],
-  ios: {
-    supportsTablet: true,
-  },
   android: {
+    package: 'net.easydaisy',
     adaptiveIcon: {
       foregroundImage: './app/assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
-    package: 'net.easydaisy',
+    googleServicesFile: './google-services.json',
+  },
+  ios: {
+    supportsTablet: true,
   },
   web: {
     favicon: './app/assets/images/favicon.png',
   },
+  plugins: ['@react-native-firebase/app'],
   extra: {
     eas: {
       projectId: 'bf20f214-e27d-470b-91d0-c779563cf5de',
     },
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    appId: process.env.FIREBASE_APP_ID,
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-    measurementId: process.env.FIREBASE_MEASUREMENT_ID,
   },
 };
