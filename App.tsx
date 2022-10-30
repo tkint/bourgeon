@@ -4,9 +4,12 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from './app/components/shared/StatusBar';
-import './app/constants/Firebase';
+import './app/firebase';
 import { AuthenticationProvider, getCurrentUser, User } from './app/hooks/useAuthentication';
+import { initI18n } from './app/hooks/useLocale';
 import { Navigation } from './app/navigation/Navigation';
+
+initI18n();
 
 export const App: React.FunctionComponent = () => {
   const [loaded, setLoaded] = useState(false);
