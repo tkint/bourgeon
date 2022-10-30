@@ -1,9 +1,10 @@
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { createContext, Dispatch, FC, ReactNode, SetStateAction, useContext, useState } from 'react';
 import { Alert } from 'react-native';
-import { cols } from '../constants/Firebase';
+import { cols } from '../firebase';
+import { LocaleOrAuto } from './useLocale';
 import { ThemeNameOrAuto } from './useTheme';
-import { UnitSystem } from './useUnits';
+import { UnitSystemOrAuto } from './useUnitSystem';
 
 type AuthUser = FirebaseAuthTypes.User;
 
@@ -16,7 +17,8 @@ export interface User {
 export namespace User {
   export interface Preferences {
     theme?: ThemeNameOrAuto;
-    unitSystem?: UnitSystem;
+    unitSystem?: UnitSystemOrAuto;
+    locale?: LocaleOrAuto;
   }
 }
 

@@ -1,13 +1,16 @@
 import configureMeasurements, { allMeasures, AllMeasuresUnits } from 'convert-units';
+import * as Localization from 'expo-localization';
 import { useAuthentication } from './useAuthentication';
 
 const convertUnits = configureMeasurements(allMeasures);
 
 export type UnitSystem = 'metric' | 'imperial';
+export type UnitSystemOrAuto = UnitSystem | 'auto';
 
 export type UseUnitsReturn = {
-  system: UnitSystem;
-  setSystem: (newValue: UnitSystem) => void;
+  rawUnitSystem: UnitSystemOrAuto;
+  setRawUnitSystem: (newValue: UnitSystemOrAuto) => void;
+  unitSystem: UnitSystem;
   convert: typeof convertUnits;
   autoConvert: (value: number, options: { source?: UnitSystem; units: Record<UnitSystem, AllMeasuresUnits> }) => number;
   autoFormat: (
@@ -22,15 +25,18 @@ export type UseUnitsReturn = {
 };
 
 /**
- * Return the user theme based on :
+ * Return the user unit system based on :
  *  - their preferences if connected
  *  - their OS settings if not
  * @returns
  */
-export const useUnits = (): UseUnitsReturn => {
+export const useUnitSystem = (): UseUnitsReturn => {
   const { currentUser, setPreference } = useAuthentication();
+  const userUnitSystem: UnitSystem = Localization.isMetric ? 'metric' : 'imperial';
 
-  const unitSystem = currentUser?.preferences?.unitSystem ?? 'metric';
+  const rawUnitSystem: UnitSystemOrAuto = currentUser?.preferences?.unitSystem ?? 'auto';
+
+  const unitSystem: UnitSystem = rawUnitSystem === 'auto' ? userUnitSystem : rawUnitSystem;
 
   const autoConvert: UseUnitsReturn['autoConvert'] = (value, { source = 'metric', units }) => {
     return convertUnits(value).from(units[source]).to(units[unitSystem]);
@@ -48,10 +54,11 @@ export const useUnits = (): UseUnitsReturn => {
   };
 
   return {
-    system: unitSystem,
-    setSystem: (newValue) => {
+    rawUnitSystem,
+    setRawUnitSystem: (newValue) => {
       setPreference('unitSystem', newValue);
     },
+    unitSystem,
     convert: convertUnits,
     autoConvert,
     autoFormat,

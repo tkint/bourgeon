@@ -1,0 +1,8 @@
+{
+  "hello": "Bonjour le monde !",
+  "preferences": {
+    "language": "Langue",
+    "theme": "Thème",
+    "units": "Unités"
+  }
+}
