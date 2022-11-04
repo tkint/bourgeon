@@ -1,8 +1,21 @@
 {
   "hello": "Bonjour le monde !",
   "preferences": {
-    "language": "Langue",
-    "theme": "Thème",
-    "units": "Unités"
+    "locale": {
+      "title": "Langue",
+      "auto": "Auto"
+    },
+    "theme": {
+      "title": "Thème",
+      "auto": "Auto",
+      "dark": "Sombre",
+      "light": "Lumineux"
+    },
+    "units": {
+      "title": "Unités",
+      "auto": "Auto",
+      "metric": "Métrique",
+      "imperial": "Impérial"
+    }
   }
 }

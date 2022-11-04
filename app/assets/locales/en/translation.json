@@ -1,8 +1,24 @@
 {
   "hello": "Hello world !",
   "preferences": {
-    "language": "Language",
-    "theme": "Theme",
-    "units": "Units"
+    "locale": {
+      "title": "Language",
+      "auto": "Auto"
+    },
+    "theme": {
+      "title": "Theme",
+      "auto": "Auto",
+      "dark": "Dark",
+      "light": "Light"
+    },
+    "units": {
+      "title": "Units",
+      "auto": "Auto",
+      "metric": "Metric",
+      "imperial": "Imperial"
+    }
+  },
+  "auth": {
+    "logout": "Log out"
   }
 }

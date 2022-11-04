@@ -1,24 +1,25 @@
+import { FC } from 'react';
 import { StyleSheet } from 'react-native';
 import { RootTabScreenProps } from '../../types';
-import { Text } from '../components/shared/Text';
-import { View } from '../components/shared/View';
+import { AppText } from '../components/shared/AppText';
+import { AppView } from '../components/shared/AppView';
 import { useUnitSystem } from '../hooks/useUnitSystem';
 
-export const RemindersScreen: React.FunctionComponent<RootTabScreenProps<'Reminders'>> = ({ navigation }) => {
+export const RemindersScreen: FC<RootTabScreenProps<'Reminders'>> = ({ navigation }) => {
   const { autoFormat } = useUnitSystem();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Reminders</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Text>
+    <AppView style={styles.container}>
+      <AppText style={styles.title}>Reminders</AppText>
+      <AppView style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      <AppText>
         100 km ={' '}
         {autoFormat(100, {
           source: 'metric',
           units: { metric: 'km', imperial: 'mi' },
         })}
-      </Text>
-    </View>
+      </AppText>
+    </AppView>
   );
 };
 

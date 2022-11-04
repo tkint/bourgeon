@@ -21,7 +21,7 @@ export type UseThemeReturn = {
  *  - their OS settings if not
  * @returns
  */
-export const useTheme = (): UseThemeReturn => {
+export const useAppTheme = (): UseThemeReturn => {
   const { currentUser, setPreference } = useAuthentication();
   const userTheme = useColorScheme() as ThemeName;
 

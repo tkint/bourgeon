@@ -1,16 +1,18 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { FC, ReactElement, useState } from 'react';
-import { Button, StyleSheet, TextInput } from 'react-native';
-import { Text } from '../components/shared/Text';
-import { View } from '../components/shared/View';
+import { Input } from '@ui-kitten/components';
+import React, { FC, useState } from 'react';
+import { Button, StyleSheet } from 'react-native';
+import { AppButton } from '../components/shared/AppButton';
+import { AppText } from '../components/shared/AppText';
+import { AppView } from '../components/shared/AppView';
+import { useAppTheme } from '../hooks/useAppTheme';
 import { useAuthentication } from '../hooks/useAuthentication';
-import { useTheme } from '../hooks/useTheme';
 
-export const SignInScreen: FC<{}> = ({}): ReactElement => {
+export const SignInScreen: FC = () => {
   const navigation = useNavigation();
   const { login } = useAuthentication();
 
-  const { getColor } = useTheme();
+  const { getColor } = useAppTheme();
 
   const linkColor = getColor('primary');
 
@@ -24,34 +26,28 @@ export const SignInScreen: FC<{}> = ({}): ReactElement => {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        value={email}
-        placeholder={'Email'}
-        onChangeText={(text) => setEmail(text)}
-        autoCapitalize={'none'}
-      />
-      <TextInput
-        style={styles.input}
+    <AppView style={styles.container}>
+      <Input value={email} placeholder={'Email'} onChangeText={(text) => setEmail(text)} style={{ marginBottom: 10 }} />
+      <Input
         value={password}
         placeholder={'Password'}
         secureTextEntry
         onChangeText={(text) => setPassword(text)}
+        style={{ marginBottom: 10 }}
       />
-      <Button color={getColor('primary')} title={'Sign In'} onPress={submit} />
+      <AppButton onPress={submit}>Sign in</AppButton>
 
-      <Text style={styles.bottomAction}>
+      <AppText style={styles.bottomAction}>
         Don't have an account ?{' '}
-        <Text
+        <AppText
           style={{ color: linkColor, marginTop: 20 }}
           onPress={() => {
             navigation.reset({ index: 0, routes: [{ name: 'SignUp' }] });
           }}>
           Sign up
-        </Text>
-      </Text>
-    </View>
+        </AppText>
+      </AppText>
+    </AppView>
   );
 };
 

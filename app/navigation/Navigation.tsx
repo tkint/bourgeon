@@ -5,13 +5,13 @@
  */
 import { DarkTheme, DefaultTheme, LinkingOptions, NavigationContainer } from '@react-navigation/native';
 import { createURL } from 'expo-linking';
-import * as React from 'react';
+import { FC } from 'react';
 import { RootStackParamList } from '../../types';
-import { useTheme } from '../hooks/useTheme';
+import { useAppTheme } from '../hooks/useAppTheme';
 import { RootNavigator } from './RootNavigator';
 
-export const Navigation: React.FunctionComponent = () => {
-  const { theme } = useTheme();
+export const Navigation: FC = () => {
+  const { theme } = useAppTheme();
 
   return (
     <NavigationContainer linking={Linking} theme={theme === 'dark' ? DarkTheme : DefaultTheme}>

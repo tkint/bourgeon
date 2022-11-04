@@ -1,10 +1,6 @@
-import { Text, TextProps } from "./Text";
+import { FC } from 'react';
+import { AppText, AppTextProps } from './AppText';
 
-export const MonoText: React.FunctionComponent<TextProps> = (props) => {
-  return (
-    <Text
-      {...props}
-      style={[props.style, { fontFamily: 'space-mono' }]}
-    />
-  );
+export const MonoText: FC<AppTextProps> = (props) => {
+  return <AppText {...props} style={[props.style, { fontFamily: 'space-mono' }]} />;
 };
