@@ -1,17 +1,17 @@
+import { FC } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-
 import { RootStackScreenProps } from '../../types';
-import { Text } from '../components/shared/Text';
-import { View } from '../components/shared/View';
+import { AppText } from '../components/shared/AppText';
+import { AppView } from '../components/shared/AppView';
 
-export const NotFoundScreen: React.FunctionComponent<RootStackScreenProps<'NotFound'>> = ({ navigation }) => {
+export const NotFoundScreen: FC<RootStackScreenProps<'NotFound'>> = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>This screen doesn't exist.</Text>
+    <AppView style={styles.container}>
+      <AppText style={styles.title}>This screen doesn't exist.</AppText>
       <TouchableOpacity onPress={() => navigation.replace('Root')} style={styles.link}>
-        <Text style={styles.linkText}>Go to home screen!</Text>
+        <AppText style={styles.linkText}>Go to home screen!</AppText>
       </TouchableOpacity>
-    </View>
+    </AppView>
   );
 };
 

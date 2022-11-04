@@ -1,17 +1,18 @@
 import { FontAwesome } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { StatusBar } from './app/components/shared/StatusBar';
+import { AppStatusBar } from './app/components/shared/AppStatusBar';
 import './app/firebase';
 import { AuthenticationProvider, getCurrentUser, User } from './app/hooks/useAuthentication';
 import { initI18n } from './app/hooks/useLocale';
 import { Navigation } from './app/navigation/Navigation';
+import { UIKittenProvider } from './app/uiKitten';
 
 initI18n();
 
-export const App: React.FunctionComponent = () => {
+export const App: FC = () => {
   const [loaded, setLoaded] = useState(false);
   const [currentUser, setCurrentUser] = useState<User>();
 
@@ -45,8 +46,10 @@ export const App: React.FunctionComponent = () => {
     return (
       <SafeAreaProvider>
         <AuthenticationProvider initialValue={currentUser}>
-          <Navigation />
-          <StatusBar />
+          <UIKittenProvider>
+            <Navigation />
+            <AppStatusBar />
+          </UIKittenProvider>
         </AuthenticationProvider>
       </SafeAreaProvider>
     );

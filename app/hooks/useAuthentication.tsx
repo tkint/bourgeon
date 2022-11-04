@@ -3,7 +3,7 @@ import { createContext, Dispatch, FC, ReactNode, SetStateAction, useContext, use
 import { Alert } from 'react-native';
 import { cols } from '../firebase';
 import { LocaleOrAuto } from './useLocale';
-import { ThemeNameOrAuto } from './useTheme';
+import { ThemeNameOrAuto } from './useAppTheme';
 import { UnitSystemOrAuto } from './useUnitSystem';
 
 type AuthUser = FirebaseAuthTypes.User;

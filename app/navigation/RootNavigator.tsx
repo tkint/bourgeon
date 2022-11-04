@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as React from 'react';
+import { FC } from 'react';
 import { RootStackParamList } from '../../types';
 import { useAuthentication } from '../hooks/useAuthentication';
 import { NotFoundScreen } from '../screens/NotFoundScreen';
@@ -14,8 +14,8 @@ import { BottomTabNavigator } from './BottomTabNavigator';
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export const RootNavigator: React.FunctionComponent = () => {
-  const { currentUser: currentUser } = useAuthentication();
+export const RootNavigator: FC = () => {
+  const { currentUser } = useAuthentication();
 
   return (
     <Stack.Navigator initialRouteName={currentUser ? 'Root' : 'SignIn'}>

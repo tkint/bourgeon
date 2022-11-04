@@ -1,16 +1,18 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { FC, ReactElement, useState } from 'react';
-import { Button, StyleSheet, TextInput } from 'react-native';
-import { Text } from '../components/shared/Text';
-import { View } from '../components/shared/View';
+import { Input } from '@ui-kitten/components';
+import React, { FC, useState } from 'react';
+import { Button, StyleSheet } from 'react-native';
+import { AppButton } from '../components/shared/AppButton';
+import { AppText } from '../components/shared/AppText';
+import { AppView } from '../components/shared/AppView';
+import { useAppTheme } from '../hooks/useAppTheme';
 import { useAuthentication } from '../hooks/useAuthentication';
-import { useTheme } from '../hooks/useTheme';
 
-export const SignUpScreen: FC<{}> = ({}): ReactElement => {
+export const SignUpScreen: FC = () => {
   const navigation = useNavigation();
   const { register } = useAuthentication();
 
-  const { getColor } = useTheme();
+  const { getColor } = useAppTheme();
 
   const linkColor = getColor('primary');
 
@@ -24,34 +26,33 @@ export const SignUpScreen: FC<{}> = ({}): ReactElement => {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
+    <AppView style={styles.container}>
+      <Input
         value={username}
         placeholder={'Email'}
         onChangeText={(text) => setUsername(text)}
-        autoCapitalize={'none'}
+        style={{ marginBottom: 10 }}
       />
-      <TextInput
-        style={styles.input}
+      <Input
         value={password}
         placeholder={'Password'}
         secureTextEntry
         onChangeText={(text) => setPassword(text)}
+        style={{ marginBottom: 10 }}
       />
-      <Button title={'Sign Up'} color={getColor('primary')} onPress={submit} />
+      <AppButton onPress={submit}>Sign up</AppButton>
 
-      <Text style={styles.bottomAction}>
+      <AppText style={styles.bottomAction}>
         Already have an account ?{' '}
-        <Text
+        <AppText
           style={{ color: linkColor, marginTop: 20 }}
           onPress={() => {
             navigation.reset({ index: 0, routes: [{ name: 'SignIn' }] });
           }}>
           Sign in
-        </Text>
-      </Text>
-    </View>
+        </AppText>
+      </AppText>
+    </AppView>
   );
 };
 

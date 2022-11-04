@@ -1,8 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import * as React from 'react';
+import { FC } from 'react';
 import { RootTabParamList, RootTabScreenProps } from '../../types';
 import { Colors } from '../constants/Colors';
-import { useTheme } from '../hooks/useTheme';
+import { useAppTheme } from '../hooks/useAppTheme';
 import { GardenScreen } from '../screens/GardenScreen';
 import { RemindersScreen } from '../screens/RemindersScreen';
 import { SettingsModalButton } from './SettingsModalButton';
@@ -14,8 +14,8 @@ import { TabBarIcon } from './TabBarIcon';
  */
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
-export const BottomTabNavigator: React.FunctionComponent = () => {
-  const { theme } = useTheme();
+export const BottomTabNavigator: FC = () => {
+  const { theme } = useAppTheme();
 
   return (
     <BottomTab.Navigator

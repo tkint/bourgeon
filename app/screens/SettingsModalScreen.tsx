@@ -1,27 +1,25 @@
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
+import { FC } from 'react';
 import { Platform, StyleSheet } from 'react-native';
-import { Button } from '../components/shared/Button';
-import { makeRadioButton } from '../components/shared/RadioButton';
-import { Text } from '../components/shared/Text';
-import { View } from '../components/shared/View';
+import { AppButton } from '../components/shared/AppButton';
+import { AppRadioButton, AppRadioGroup } from '../components/shared/AppRadioButton';
+import { AppText } from '../components/shared/AppText';
+import { AppView } from '../components/shared/AppView';
+import { useAppTheme } from '../hooks/useAppTheme';
 import { useAuthentication } from '../hooks/useAuthentication';
 import { useLocale } from '../hooks/useLocale';
-import { useTheme } from '../hooks/useTheme';
 import { useUnitSystem } from '../hooks/useUnitSystem';
 
-export const SettingsModalScreen: React.FunctionComponent = () => {
+export const SettingsModalScreen: FC = () => {
   const navigation = useNavigation();
   const { logout } = useAuthentication();
 
   const { rawLocale, setRawLocale, t } = useLocale();
-  const LocaleRadio = makeRadioButton(rawLocale);
 
-  const { rawTheme, setRawTheme, invertedTheme, getColor } = useTheme();
-  const ThemeRadio = makeRadioButton(rawTheme);
+  const { rawTheme, setRawTheme, invertedTheme } = useAppTheme();
 
   const { rawUnitSystem, setRawUnitSystem } = useUnitSystem();
-  const SystemRadio = makeRadioButton(rawUnitSystem);
 
   const logoutUser = async () => {
     if (await logout()) {
@@ -34,44 +32,44 @@ export const SettingsModalScreen: React.FunctionComponent = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <AppView style={styles.container}>
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : invertedTheme} />
 
-      <Text style={styles.settingTitle}>{t('preferences.language')}</Text>
+      <AppText style={styles.settingTitle}>{t('preferences.locale.title')}</AppText>
 
-      <View style={styles.settingContent}>
-        <LocaleRadio.Group onChange={setRawLocale}>
-          <LocaleRadio.Button value={'auto'} title="Auto"></LocaleRadio.Button>
-          <LocaleRadio.Button value={'en'} title="English"></LocaleRadio.Button>
-          <LocaleRadio.Button value={'fr'} title="Français"></LocaleRadio.Button>
-        </LocaleRadio.Group>
-      </View>
+      <AppView style={styles.settingContent}>
+        <AppRadioGroup selectedValue={rawLocale} onChange={setRawLocale}>
+          <AppRadioButton value="auto">{t('preferences.locale.auto')}</AppRadioButton>
+          <AppRadioButton value="en">English</AppRadioButton>
+          <AppRadioButton value="fr">Français</AppRadioButton>
+        </AppRadioGroup>
+      </AppView>
 
-      <Text style={styles.settingTitle}>{t('preferences.theme')}</Text>
+      <AppText style={styles.settingTitle}>{t('preferences.theme.title')}</AppText>
 
-      <View style={styles.settingContent}>
-        <ThemeRadio.Group onChange={setRawTheme}>
-          <ThemeRadio.Button value={'auto'} title="Auto"></ThemeRadio.Button>
-          <ThemeRadio.Button value={'dark'} title="Dark"></ThemeRadio.Button>
-          <ThemeRadio.Button value={'light'} title="Light"></ThemeRadio.Button>
-        </ThemeRadio.Group>
-      </View>
+      <AppView style={styles.settingContent}>
+        <AppRadioGroup selectedValue={rawTheme} onChange={setRawTheme}>
+          <AppRadioButton value="auto">{t('preferences.theme.auto')}</AppRadioButton>
+          <AppRadioButton value="dark">{t('preferences.theme.dark')}</AppRadioButton>
+          <AppRadioButton value="light">{t('preferences.theme.light')}</AppRadioButton>
+        </AppRadioGroup>
+      </AppView>
 
-      <Text style={styles.settingTitle}>{t('preferences.units')}</Text>
+      <AppText style={styles.settingTitle}>{t('preferences.units.title')}</AppText>
 
-      <View style={styles.settingContent}>
-        <SystemRadio.Group onChange={setRawUnitSystem}>
-          <SystemRadio.Button value={'auto'} title="Auto"></SystemRadio.Button>
-          <SystemRadio.Button value={'metric'} title="Metric System"></SystemRadio.Button>
-          <SystemRadio.Button value={'imperial'} title="Imperial Units"></SystemRadio.Button>
-        </SystemRadio.Group>
-      </View>
+      <AppView style={styles.settingContent}>
+        <AppRadioGroup selectedValue={rawUnitSystem} onChange={setRawUnitSystem}>
+          <AppRadioButton value="auto">{t('preferences.units.auto')}</AppRadioButton>
+          <AppRadioButton value="metric">{t('preferences.units.metric')}</AppRadioButton>
+          <AppRadioButton value="imperial">{t('preferences.units.imperial')}</AppRadioButton>
+        </AppRadioGroup>
+      </AppView>
 
-      <View style={styles.settingContent}>
-        <Button title="Log out" color={getColor('primary')} onPress={logoutUser}></Button>
-      </View>
-    </View>
+      <AppView style={styles.settingContent}>
+        <AppButton onPress={logoutUser}>{t('auth.logout')}</AppButton>
+      </AppView>
+    </AppView>
   );
 };
 
